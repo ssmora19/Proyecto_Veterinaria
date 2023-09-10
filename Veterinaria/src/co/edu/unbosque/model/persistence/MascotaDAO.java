@@ -5,28 +5,31 @@ import co.edu.unbosque.util.DequeList;
 import co.edu.unbosque.util.QueueImpl;
 
 public class MascotaDAO {
-	
-	private FileHandler archivo;
+
 	private QueueImpl<MascotaDTO> pets;
-	
-	public MascotaDAO(FileHandler archivo) {
-		this.archivo=archivo;
+
+	public MascotaDAO() {
+		pets = FileHandler.readFile();
 	}
-	
+
 	public String showPets() {
-		pets=archivo.readFile();
-		System.out.println("El archivo se esta leyendo");
-		String texto ="";
-		for(int i=0; i< pets.size();i++) {
-			texto=texto.concat(pets.toString()+"\n");
+		System.out.println("Muestro");
+		StringBuilder sb= new StringBuilder();
+		for (int i = 0; i < pets.size(); i++) {
+			
 		}
-		return texto;	
+		return pets.toString();
+	}
+
+	public void add(Object obj) {
+		pets.enqueue((MascotaDTO) obj);
+		System.out.println("Estoy agregando y escribiendo");
+		FileHandler.escribirEnArchivo(pets);
 	}
 	
-	public void add(Object obj) {
-		pets.enqueue((MascotaDTO)obj);
-		System.out.println("Estoy agregando y escribiendo");
-		archivo.escribirEnArchivo(pets);
+	public void delete() {
+		pets.dequeue();
+		System.out.println("Estoy eliminando");
 	}
 
 }

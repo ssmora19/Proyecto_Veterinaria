@@ -12,51 +12,53 @@ import co.edu.unbosque.util.DequeList;
 import co.edu.unbosque.util.QueueImpl;
 
 public class FileHandler {
-	
+
 	private static ObjectInputStream entrada;
 	private static ObjectOutputStream salida;
-	private File archivo;
-	
+	private static File archivo;
+
 	public FileHandler() {
-		archivo= new File("data/mascota.txt");
-		if(archivo.exists()) {
+		archivo = new File("data/mascota.txt");
+		if (archivo.exists()) {
 			System.out.println("El archivo ya existe");
-		}else {
+		} else {
 			try {
 				archivo.createNewFile();
-			}catch(IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
-	
-	public void escribirEnArchivo(QueueImpl<MascotaDTO> pets) {
+
+	public static void escribirEnArchivo(QueueImpl<MascotaDTO> pets) {
 		try {
-			salida= new ObjectOutputStream(new FileOutputStream(archivo));
+			salida = new ObjectOutputStream(new FileOutputStream("data/mascota.txt"));
+
 			salida.writeObject(pets);
 			salida.close();
-		}catch(FileNotFoundException e) {
-			e.printStackTrace();
-		}catch(IOException e) {
+		} catch (FileNotFoundException e) {
+
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public QueueImpl<MascotaDTO> readFile(){
-		QueueImpl<MascotaDTO> pets= new QueueImpl<MascotaDTO>();
-		if(archivo.length()!=0) {
-			try {
-				entrada= new ObjectInputStream(new FileInputStream(archivo));
-				pets= (QueueImpl<MascotaDTO>)entrada.readObject();				
-			}catch(FileNotFoundException e) {
-				e.printStackTrace();
-			}catch(IOException e) {
-				e.printStackTrace();
-			}catch(ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-		}return pets;	
+
+	public static QueueImpl<MascotaDTO> readFile() {
+		QueueImpl<MascotaDTO> pets = new QueueImpl<MascotaDTO>();
+		try {
+			entrada = new ObjectInputStream(new FileInputStream("data/mascota.txt"));
+			pets = (QueueImpl<MascotaDTO>) entrada.readObject();
+			entrada.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+
+		}
+		return pets;
 	}
 
 	public static ObjectInputStream getEntrada() {
@@ -82,8 +84,5 @@ public class FileHandler {
 	public void setArchivo(File archivo) {
 		this.archivo = archivo;
 	}
-	
-	
-	
 
 }

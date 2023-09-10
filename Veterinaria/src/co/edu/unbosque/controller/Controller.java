@@ -1,9 +1,8 @@
 package co.edu.unbosque.controller;
 
-import java.util.Date;
-
 import co.edu.unbosque.model.MascotaDTO;
 import co.edu.unbosque.model.persistence.FileHandler;
+import co.edu.unbosque.model.persistence.MascotaDAO;
 import co.edu.unbosque.util.QueueImpl;
 import co.edu.unbosque.util.StackImpl;
 import co.edu.unbosque.view.VistaConsola;
@@ -11,35 +10,34 @@ import co.edu.unbosque.view.VistaConsola;
 public class Controller {
 	
 	private VistaConsola vista;
-	private FileHandler archivo;
 	private StackImpl<Long> blanckets;
-	private QueueImpl<MascotaDTO> pets;
+	private MascotaDAO mdao;
+	private int sizeStack;
 	
 	public Controller() {
 		vista= new VistaConsola();
-		archivo= new FileHandler();
 		blanckets=new StackImpl<>();
-		pets=new QueueImpl<>();
+		mdao = new MascotaDAO();
 		
 		funcionar();
 	}
 	
 	public void funcionar() {
 		
-		for (int i = 0; i < 3; i++) {
-			blanckets.push(((long)i));		
-		}
-		
 		System.out.println("BIENVENIDO A LA VETERINARIA");
 		String opcion = "MENU:\n"
+				+ "Recomendacion: Una vez se solicita el turno y se diligencian\n"
+				+ " los datos, por favor registrar su consulta\n"
+				+ " para que esta sea validada.\n"
 				+ "1. Solicitar turno.\n"
-				+ "2. Mostrar cola de mascotas.\n"
-				+ "2.Salir.\n";
+				+ "2. Registrar consulta.\n"
+				+ "3. Mostrar cola de mascotas.\n"
+				+ "4. Salir.\n";
 		vista.mostrarInformacion(opcion);
 		int rta=vista.leerDatoEntero("Seleccione una opción:");
-		String auxpetname,auxrace,auxownername="";
+		String auxpetname,auxrace,auxownername,auxanswer="";
 		long auxid,auxphone;
-		int sizeStack= blanckets.size();
+		
 		
 		switch (rta) {
 		
@@ -52,12 +50,10 @@ public class Controller {
 				auxid=vista.leerDato("Digite su numero de identificacion");
 				auxpetname= vista.leerCadenaCaracteres("Ingrese el nombre de la mascota");
 				auxrace= vista.leerCadenaCaracteres("Ingrese la raza de la mascota");
-				pets.enqueue(new MascotaDTO(auxpetname, auxrace, auxownername,auxid,auxphone,true));
+				mdao.add(new MascotaDTO(auxpetname, auxrace, auxownername,auxid,auxphone));
 				System.out.println("Se le ha asignado un turno");
-				blanckets.pop();
 				sizeStack--;
-				vista.mostrarInformacion(opcion);
-				int rta1=vista.leerDatoEntero("Seleccione una opción:");	
+				System.out.println(sizeStack);
 			}else {
 				
 				System.out.println("Lo sentimos,no podemos atenderlo, el numero de cobijas no es suficiente");
@@ -66,22 +62,36 @@ public class Controller {
 			break;
 			
 		case 2:
-			System.out.println(pets.toString());
+			auxanswer=vista.leerCadenaCaracteres("Se llevo a cabo la consulta a su mascota?(Si/No)");
+			if(auxanswer.equals("Si")) {
+				mdao.delete();
+				System.out.println(mdao.showPets());
+				System.out.println("Siguiente en la fila!");	
+			}else if(auxanswer.equals("No")) {
+				System.out.println("Espere un momento a que llegue su turno de consulta");
+			}
 			break;
 			
 		case 3:
-			vista.mostrarInformacion("Hasta la próxima <3");
+			System.out.println(mdao.showPets());
+			break;
+			
+		case 4:
+			vista.mostrarInformacion("Hasta Pronto :)");
 			break;
 		}
-		if( rta !=4) {
+		if( rta !=5) {
 			funcionar();
 		}
-		
-		
 			
-		
-		
-			
+	}
+	
+	public int pushStack() {
+		for (int i = 0; i < 6; i++) {
+			blanckets.push(((long)i));
+			sizeStack= blanckets.size();
+		}
+		return sizeStack;
 	}
 
 }

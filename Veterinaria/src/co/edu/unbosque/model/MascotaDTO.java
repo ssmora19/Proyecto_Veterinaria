@@ -11,20 +11,18 @@ public class MascotaDTO implements Serializable{
 	private String ownername;
 	private long id;
 	private long ownerphone;
-	private boolean attended;
 	//private Date petage;
 	
 	public MascotaDTO() {
 	}
 
-	public MascotaDTO(String petname, String race, String ownername,long id, long ownerphone,boolean attended) {
+	public MascotaDTO(String petname, String race, String ownername,long id, long ownerphone) {
 		super();
 		this.petname = petname;
 		this.race = race;
 		this.ownername = ownername;
 		this.id = id;
 		this.ownerphone = ownerphone;
-		this.attended= attended;
 		//this.petage = petage;
 	}
 
@@ -78,18 +76,11 @@ public class MascotaDTO implements Serializable{
 //		this.petage = petage;
 //	}
 
-	public boolean isAttended() {
-		return attended;
-	}
-
-	public void setAttended(boolean attended) {
-		this.attended = attended;
-	}
 
 	@Override
 	public String toString() {
 		return "MascotaDTO [petname=" + petname + ", race=" + race + ", ownername=" + ownername + ", id=" + id
-				+ ", ownerphone=" + ownerphone + ",attended="+ attended+"]";
+				+ ", ownerphone=" + ownerphone +"]";
 	}
 	
 	
